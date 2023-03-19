@@ -1,9 +1,13 @@
 
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_app/screens/LoginScreen.dart';
 import 'package:lottie/lottie.dart';
+
+import 'HomeScreen.dart';
+import 'loc.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,17 +15,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  startTimer(){
+    Timer(const Duration(seconds: 2), () async{
+      if(FirebaseAuth.instance.currentUser != null){
+        Route newRoute = MaterialPageRoute(builder: (context) => const HomeScreen());
+        Navigator.pushReplacement(context, newRoute);
+      }
+      else {
+        Route newRoute = MaterialPageRoute(
+            builder: (context) => LoginScreen());
+        Navigator.pushReplacement(context, newRoute);
+      }
+    });
+  }
+
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => LoginScreen(),
-        ),
-      );
-    });
+    startTimer();
   }
 
   @override

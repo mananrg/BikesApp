@@ -40,8 +40,13 @@ dependencies:
   firebase_database:
   lottie: ^1.1.0
   pinput:
-  google_maps_flutter:
+  google_maps_flutter: 2.0.6
   firebase_app_check:
+  geolocator:
+  geocoding: ^2.0.4
+  camera:
+  qr_code_scanner:
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter
