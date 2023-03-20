@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_app/main.dart';
 import 'package:uber_app/screens/LoginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../popup.dart';
+import '../widgets/popup.dart';
 import 'HomeScreen.dart';
 import 'OtpVerificationScreen.dart';
 
@@ -108,7 +109,9 @@ class _EnterPhoneState extends State<EnterPhone> {
                 onChanged: (value) {
                   setState(() {
                     _phoneNumber = value;
-                    print(_phoneNumber);
+                    if (kDebugMode) {
+                      print(_phoneNumber);
+                    }
                     if (_phoneNumber.length == 10) {
                       buttonState = true;
                     } else {
@@ -154,9 +157,12 @@ class _EnterPhoneState extends State<EnterPhone> {
                       verificationFailed: (FirebaseAuthException e) {},
                       codeSent: (String verificationId, int? resendToken) {
                         EnterPhone.verify = verificationId;
-                        PopUpMessage(
-                          title: 'OTP Sent',
-                          message: 'You are successfully verified',
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => PopUpMessage(
+                            title: 'OTP Sent',
+                            message: 'You are successfully verified',
+                          ),
                         );
                         Navigator.of(context).push(
                           MaterialPageRoute(
@@ -167,19 +173,25 @@ class _EnterPhoneState extends State<EnterPhone> {
                       codeAutoRetrievalTimeout: (String verificationId) {},
                     );
                   } catch (e) {
-                    PopUpMessage(
-                      title: 'Error',
-                      message:
-                          'Error sending OTP! /n Please contact administrator for more Information',
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => PopUpMessage(
+                        title: 'Error',
+                        message:
+                            'Error sending OTP! /n Please contact administrator for more Information',
+                      ),
                     );
                   }
 
                   // do something when the button is pressed
                   if (buttonState == false) {
-                    PopUpMessage(
-                      title: 'Invalid Phone Number',
-                      message:
-                          "Please check that you have entered your phone number correctly",
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => PopUpMessage(
+                        title: 'Invalid Phone Number',
+                        message:
+                            "Please check that you have entered your phone number correctly",
+                      ),
                     );
                   }
                 },

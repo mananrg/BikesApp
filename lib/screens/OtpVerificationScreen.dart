@@ -1,13 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import 'package:uber_app/popup.dart';
+import 'package:uber_app/widgets/popup.dart';
 import 'package:uber_app/screens/HomeScreen.dart';
 import 'package:uber_app/screens/EnterPhoneNumberScreen.dart';
 import 'package:uber_app/screens/UserAgreementScreen.dart';
 
+import 'firebase_service.dart';
+
 class MyVerify extends StatefulWidget {
-  const MyVerify({Key? key}) : super(key: key);
+  const MyVerify({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyVerify> createState() => _MyVerifyState();
@@ -30,6 +34,7 @@ class _MyVerifyState extends State<MyVerify> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseService _firebaseService = FirebaseService();
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
@@ -71,9 +76,9 @@ class _MyVerifyState extends State<MyVerify> {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Icon(Icons.arrow_back_ios),
+                        child: const Icon(Icons.arrow_back_ios),
                       ),
-                      Text(
+                      const Text(
                         "Back",
                         style: TextStyle(color: Colors.grey),
                       )
@@ -126,22 +131,38 @@ class _MyVerifyState extends State<MyVerify> {
                                 verificationId: EnterPhone.verify,
                                 smsCode: code);
                         // Sign the user in (or link) with the credential
-                        await auth.signInWithCredential(credential);
-                        PopUpMessage(
-                          title: 'Verified',
-                          message: 'You are successfully verified',
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UserAgreement(),
+                        UserCredential authResult =    await auth.signInWithCredential(credential);
+                        User? user = authResult.user;
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => PopUpMessage(
+                            title: 'Verified',
+                            message: 'You are successfully verified',
                           ),
                         );
+                        if (user != null) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserAgreement(),
+                            ),
+                          );
+                        } else {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
+                          );
+                        }
                       } catch (e) {
-                        PopUpMessage(
-                          title: 'Error',
-                          message:
-                              'Error sending OTP please contact Metro Mobility',
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => PopUpMessage(
+                            title: 'Error',
+                            message:
+                                'Error sending OTP please contact Metro Mobility',
+                          ),
                         );
                       }
                     },

@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // do something when the button is pressed
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                const EnterPhone()));
+                                const EnterPhone(),),);
                       },
                     ),
                   ),

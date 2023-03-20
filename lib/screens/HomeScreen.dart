@@ -4,7 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:uber_app/screens/Drawer/Help.dart';
+import 'package:uber_app/screens/Drawer/Operator.dart';
 import 'package:uber_app/screens/PreferencesScreen.dart';
+import 'package:uber_app/screens/Drawer/RideHistory.dart';
+import 'package:uber_app/screens/Drawer/Wallet.dart';
 
 import 'LoginScreen.dart';
 import 'QRCodeScanner.dart';
@@ -54,7 +59,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    locatePosition();
+    requestPermission();
+  }
+
+  Future<void> requestPermission() async {
+    final status = await Permission.locationWhenInUse.request();
+    if (status == PermissionStatus.granted) {
+      locatePosition();
+    } else {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Error"),
+          content: const Text("Your data has been successfully updated!"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.green),
+                padding: const EdgeInsets.all(14),
+                child: const Text(
+                  "OKAY",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   static const CameraPosition _kLake = CameraPosition(
@@ -72,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Drawer(
         backgroundColor: Colors.grey[800],
         width: MediaQuery.of(context).size.width * 0.7,
-        child: ListView(
+        child: Column(
           children: [
             Container(
               color: Colors.black87,
@@ -101,8 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0),
                       child: GestureDetector(
-                        onTap: (){
-                          Navigator.pushReplacement(
+                        onTap: () {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => PreferenceScreen(),
@@ -145,12 +184,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Column(
                     children: [
-                      buildRow(Icons.wallet, "Wallet"),
-                      buildRow(Icons.history, "Ride History"),
-                      buildRow(Icons.live_help_outlined, "Help"),
-                      buildRow(Icons.person_3_sharp, "Operator"),
+                      buildRow(
+                        Icons.wallet,
+                        "Wallet",const Wallet(),
+                      ),
+                      buildRow(Icons.history, "Ride History",const RideHistory()),
+                      buildRow(Icons.live_help_outlined, "Help",const Help()),
+                      buildRow(Icons.person_3_sharp, "Operator",const Operator()),
                     ],
                   ),
+                ],
+              ),
+            ),
+            const Expanded(
+              child: SizedBox(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Column(
+                children: [
                   TextButton(
                     onPressed: () async {
                       await FirebaseAuth.instance.signOut();
@@ -161,8 +213,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     },
-                    child: const Text("LOGOUT"),
-                  )
+                    child: const Text(
+                      "LOGOUT",
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
             )
@@ -195,7 +250,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
-                    child: const Icon(Icons.menu,weight: 12,),
+                    child: const Icon(
+                      Icons.menu,
+                      weight: 12,
+                    ),
                   ),
                   Image.asset(
                     "assets/images/logoblack.png",
@@ -221,7 +279,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 3),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 3),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -237,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      QRViewExample(),
+                                      const QRViewExample(),
                                 ),
                               );
                             },
@@ -260,26 +319,35 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding buildRow(IconData icon, String text) {
+  Padding buildRow(IconData icon, String text, Widget page) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 25),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 5.0),
-            child: Icon(
-              icon,
-              color: Colors.white54,
-            ),
-          ),
-          Text(
-            text,
-            style: const TextStyle(
-                fontSize: 18,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => page,
+              ));
+        },
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 5.0),
+              child: Icon(
+                icon,
                 color: Colors.white54,
-                fontWeight: FontWeight.bold),
-          ),
-        ],
+              ),
+            ),
+            Text(
+              text,
+              style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white54,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

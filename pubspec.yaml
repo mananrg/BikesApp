@@ -38,6 +38,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   firebase_database:
+  cloud_firestore:
   lottie: ^1.1.0
   pinput:
   google_maps_flutter: 2.0.6
@@ -46,6 +47,7 @@ dependencies:
   geocoding: ^2.0.4
   camera:
   qr_code_scanner:
+  permission_handler: ^8.0.0+1
     
 dev_dependencies:
   flutter_test:
