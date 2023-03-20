@@ -15,9 +15,12 @@ class _BikesScreenState extends State<BikesScreen> {
       body: Container(
         child: Column(
           children: [
-            IconButton(onPressed: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
-            }, icon: Icon(Icons.arrow_back_ios)),
+            Padding(
+              padding: const EdgeInsets.only(top:50),
+              child: IconButton(onPressed: (){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+              }, icon: Icon(Icons.arrow_back_ios)),
+            ),
             Center(
               child: Text("Home Screen"),
             ),

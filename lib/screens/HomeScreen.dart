@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,9 +13,11 @@ import 'package:uber_app/screens/Drawer/Operator.dart';
 import 'package:uber_app/screens/PreferencesScreen.dart';
 import 'package:uber_app/screens/Drawer/RideHistory.dart';
 import 'package:uber_app/screens/Drawer/Wallet.dart';
+import 'package:uber_app/screens/Scanner.dart';
 
 import 'LoginScreen.dart';
 import 'QRCodeScanner.dart';
+import 'UnlockScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -32,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
   var long;
   final Completer<GoogleMapController> _controllerGoogleMap =
       Completer<GoogleMapController>();
-
+  String _scanBarcode = 'Unknown';
+  late String barcodeScanRes;
   GoogleMapController? newGoogleMapController;
 
   locatePosition() async {
@@ -144,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PreferenceScreen(),
+                              builder: (context) => const PreferenceScreen(),
                             ),
                           );
                         },
@@ -238,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _controllerGoogleMap.complete(controller);
                 newGoogleMapController = controller;
 
-                locatePosition();
+
               },
             ),
             Padding(
@@ -293,12 +299,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const QRViewExample(),
-                                ),
-                              );
+                              scanBarcodeNormal();
+
                             },
                           ),
                           const Text(
@@ -318,7 +320,80 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  Future<void> scanBarcodeNormal() async {
 
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+
+      DocumentSnapshot document = await FirebaseFirestore.instance
+          .collection('bikeqr')
+          .doc(barcodeScanRes)
+          .get();
+      if (document.exists) {
+        // If the document exists, navigate to a different screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BikesScreen(),
+          ),
+        );
+      } else {
+        // If the document doesn't exist, show an error message
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Invalid QR Code'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }catch (e) {
+      // If there is an error, show an error message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('An error occurred.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+
+  }
   Padding buildRow(IconData icon, String text, Widget page) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 25),
