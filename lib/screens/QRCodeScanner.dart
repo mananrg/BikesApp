@@ -1,9 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../widgets/popup.dart';
+import 'UnlockScreen.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -17,6 +21,9 @@ class _QRViewExampleState extends State<QRViewExample> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool flashStatus = false;
+  String? qrCodeValue;
+  bool isScanned = false;
+
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
   @override
@@ -26,6 +33,12 @@ class _QRViewExampleState extends State<QRViewExample> {
       controller!.pauseCamera();
     }
     controller!.resumeCamera();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,9 +84,9 @@ class _QRViewExampleState extends State<QRViewExample> {
                   children: <Widget>[
                     if (result != null)
                       Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}',
+                        isScanned ? 'Scanned Successfully!' : 'Scan a QR Code',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
+                            fontWeight: FontWeight.bold, color: Colors.blue),
                       )
                     else
                       const Text(''),
@@ -88,10 +101,9 @@ class _QRViewExampleState extends State<QRViewExample> {
                               await controller?.toggleFlash();
                               setState(() {
                                 flashStatus = !flashStatus;
-                                print("*"*100);
+                                print("*" * 100);
                                 print(flashStatus);
-                                print("*"*100);
-
+                                print("*" * 100);
                               });
                             },
                             icon: Icon(
@@ -189,24 +201,97 @@ class _QRViewExampleState extends State<QRViewExample> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
+      if (isScanned) return; // prevent multiple scans
+      setState(() => isScanned = true);
+   try {
+
+        DocumentSnapshot document = await FirebaseFirestore.instance
+          .collection('bikeqr')
+          .doc(scanData.code)
+          .get();
+      if (document.exists) {
+        setState(() => isScanned = true);
+        // If the document exists, navigate to a different screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BikesScreen(),
+          ),
+        );
+      } else {
+        // If the document doesn't exist, show an error message
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Invalid QR Code'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    setState(() => isScanned = false);
+                    controller.resumeCamera();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }}catch (e) {
+        // If there is an error, show an error message
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('An error occurred.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    setState(() => isScanned = false);
+                    controller.resumeCamera();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      /*  if (kDebugMode) {
+        print('Data: ${result?.code}');
+      }
       setState(() {
         result = scanData;
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-
-        print(result!.format);
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-        print("*"*200);
-
+        qrCodeValue = result!.code;
       });
+      if (await checkQRCodeExists(qrCodeValue!) ) {
+        print("#"*100);
+        print("#"*100);
+        print("#"*100);
+        print("#"*100);
+
+        controller?.dispose();
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => BikesScreen()));
+      } else {
+        print("\$"*100);
+        print("\$"*100);
+        print("\$"*100);
+        print("\$"*100);
+        showDialog(
+          context: context,
+          builder: (ctx) => PopUpMessage(
+            title: 'Qr not Found',
+            message: 'Wrong QR',
+          ),
+        );
+      }*/
     });
   }
 
@@ -217,11 +302,5 @@ class _QRViewExampleState extends State<QRViewExample> {
         const SnackBar(content: Text('no Permission')),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 }
