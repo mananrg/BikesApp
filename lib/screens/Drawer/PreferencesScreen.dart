@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'firebase_service.dart';
+import '../../widgets/firebase_service.dart';
 
 class PreferenceScreen extends StatefulWidget {
   const PreferenceScreen({Key? key}) : super(key: key);

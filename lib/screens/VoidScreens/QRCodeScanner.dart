@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../widgets/popup.dart';
-import 'UnlockScreen.dart';
+import '../../widgets/popup.dart';
+import '../MainScreens/UnlockScreen.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);

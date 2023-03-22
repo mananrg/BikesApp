@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:uber_app/widgets/popup.dart';
-import 'package:uber_app/screens/HomeScreen.dart';
-import 'package:uber_app/screens/EnterPhoneNumberScreen.dart';
-import 'package:uber_app/screens/UserAgreementScreen.dart';
+import 'package:uber_app/screens/MainScreens/HomeScreen.dart';
+import 'package:uber_app/screens/SignUpScreens/EnterPhoneNumberScreen.dart';
+import 'package:uber_app/screens/SignUpScreens/UserAgreementScreen.dart';
 
-import 'firebase_service.dart';
+import '../../widgets/firebase_service.dart';
 
 class MyVerify extends StatefulWidget {
   const MyVerify({

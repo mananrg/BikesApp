@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uber_app/screens/SplashScreen.dart';
+import 'package:uber_app/screens/SignUpScreens/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 

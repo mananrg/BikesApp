@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_app/main.dart';
-import 'package:uber_app/screens/LoginScreen.dart';
+import 'package:uber_app/screens/SignUpScreens/LoginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../widgets/popup.dart';
-import 'HomeScreen.dart';
+import '../../widgets/popup.dart';
+import '../MainScreens/HomeScreen.dart';
 import 'OtpVerificationScreen.dart';
 
 class EnterPhone extends StatefulWidget {
@@ -142,59 +142,57 @@ class _EnterPhoneState extends State<EnterPhone> {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: TextButton(
+                onPressed: buttonState
+                    ? () async {
+                        try {
+                          await FirebaseAuth.instance.verifyPhoneNumber(
+                            phoneNumber: countrycode + _phoneNumber,
+                            verificationCompleted:
+                                (PhoneAuthCredential credential) {},
+                            verificationFailed: (FirebaseAuthException e) {},
+                            codeSent:
+                                (String verificationId, int? resendToken) {
+                              EnterPhone.verify = verificationId;
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => PopUpMessage(
+                                  title: 'OTP Sent',
+                                  message:
+                                      'OTP was successfully sent your registered number!',
+                                ),
+                              );
+                              Future.delayed(const Duration(seconds: 6), () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const MyVerify(),
+                                  ),
+                                );
+                              });
+                            },
+                            codeAutoRetrievalTimeout:
+                                (String verificationId) {},
+                          );
+                        } catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => PopUpMessage(
+                              title: 'Error',
+                              message:
+                                  'Error sending OTP! /n Please contact administrator for more Information',
+                            ),
+                          );
+                        }
+
+                        // do something when the button is pressed
+                      }
+                    : null,
                 child: const Text(
                   'NEXT',
                   style: TextStyle(
                     color: Colors.white,
                   ),
                 ),
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.verifyPhoneNumber(
-                      phoneNumber: countrycode + _phoneNumber,
-                      verificationCompleted:
-                          (PhoneAuthCredential credential) {},
-                      verificationFailed: (FirebaseAuthException e) {},
-                      codeSent: (String verificationId, int? resendToken) {
-                        EnterPhone.verify = verificationId;
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => PopUpMessage(
-                            title: 'OTP Sent',
-                            message: 'You are successfully verified',
-                          ),
-                        );
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => const MyVerify(),
-                          ),
-                        );
-                      },
-                      codeAutoRetrievalTimeout: (String verificationId) {},
-                    );
-                  } catch (e) {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => PopUpMessage(
-                        title: 'Error',
-                        message:
-                            'Error sending OTP! /n Please contact administrator for more Information',
-                      ),
-                    );
-                  }
-
-                  // do something when the button is pressed
-                  if (buttonState == false) {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => PopUpMessage(
-                        title: 'Invalid Phone Number',
-                        message:
-                            "Please check that you have entered your phone number correctly",
-                      ),
-                    );
-                  }
-                },
               ),
             ),
             const Padding(

@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uber_app/screens/LoginScreen.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_app/screens/SignUpScreens/LoginScreen.dart';
 import 'package:lottie/lottie.dart';
-import 'HomeScreen.dart';
+import '../MainScreens/HomeScreen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,6 +17,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   startTimer() {
     Timer(const Duration(seconds: 2), () async {
       if (FirebaseAuth.instance.currentUser != null) {
@@ -33,8 +37,10 @@ class _SplashScreenState extends State<SplashScreen> {
     startTimer();
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

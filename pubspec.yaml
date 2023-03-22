@@ -49,7 +49,7 @@ dependencies:
   qr_code_scanner:
   permission_handler: ^8.0.0+1
   flutter_barcode_scanner: ^2.0.0
-
+  shared_preferences:
 dev_dependencies:
   flutter_test:
     sdk: flutter

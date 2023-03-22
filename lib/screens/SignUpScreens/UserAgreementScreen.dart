@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'HomeScreen.dart';
+import '../MainScreens/HomeScreen.dart';
 
 class UserAgreement extends StatefulWidget {
   const UserAgreement({Key? key}) : super(key: key);
@@ -16,9 +16,8 @@ class _UserAgreementState extends State<UserAgreement> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-        child: Container(height:  size.height,
-          
-          
+        child: Container(
+          height: size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,7 +27,7 @@ class _UserAgreementState extends State<UserAgreement> {
                 child: Image.asset("assets/images/cycle.png"),
               ),
               const Padding(
-                padding: EdgeInsets.only(top: 18.0,bottom: 24),
+                padding: EdgeInsets.only(top: 18.0, bottom: 24),
                 child: Text(
                   "User Agreement",
                   style: TextStyle(fontSize: 24),
@@ -38,23 +37,33 @@ class _UserAgreementState extends State<UserAgreement> {
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text.rich(
                   TextSpan(
-                    text: 'By tapping “I Agree”, I confirm that I am at least 18 years old, or other legal age of majority, and that I have read and agreed to Metro Mobility’s',
-                    style: const TextStyle(fontSize: 16,color: Colors.grey),
+                    text:
+                        'By tapping “I Agree”, I confirm that I am at least 18 years old, or other legal age of majority, and that I have read and agreed to Metro Mobility’s',
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
                     children: [
-
-                       TextSpan(
+                      TextSpan(
                         text: ' User Agreement',
-                        style: const TextStyle(fontSize: 16,color: Colors.blue,decoration: TextDecoration.underline,),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             // Do something when the link is tapped
                           },
-                      ), const TextSpan(
+                      ),
+                      const TextSpan(
                         text: ' and ',
-                        style: TextStyle(fontSize: 16,color: Colors.grey),
-                      ),  TextSpan(
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                      TextSpan(
                         text: 'Privacy Notice.',
-                        style: const TextStyle(fontSize: 16,color: Colors.blue, decoration: TextDecoration.underline,),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             // Do something when the link is tapped
@@ -64,11 +73,13 @@ class _UserAgreementState extends State<UserAgreement> {
                   ),
                 ),
               ),
-              const Expanded(child: SizedBox(),),
+              const Expanded(
+                child: SizedBox(),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 14.0),
                 child: Container(
-                  width: MediaQuery.of(context).size.width*0.9,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   height: 50,
                   decoration: BoxDecoration(
                     color: const Color(0xFF39D4AA),
@@ -83,7 +94,12 @@ class _UserAgreementState extends State<UserAgreement> {
                     ),
                     onPressed: () {
                       // do something when the button is pressed
-Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>const HomeScreen(),),);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (ctx) => const HomeScreen(),
+                        ),
+                      );
                     },
                   ),
                 ),
