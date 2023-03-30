@@ -19,10 +19,19 @@ Display images of bikes from the repository.
 * Google Maps API for displaying bike locations.
 
 <table>
+   <tr>
+   <td>SplashScreen </td>
+   <td>LoginScreen  </td>
+   <td>OtpScreen  </td>
+   <td>UserAgreementScreen </td>
+   <td>HomeScreen  </td>
+  </tr>
   <tr>
+   <td><img src="https://github.com/mananrg/BikesApp/blob/main/splashscreen.png" width="200"/>   </td>
    <td><img src="https://github.com/mananrg/BikesApp/blob/main/loginscreen.png" width="200"/>   </td>
-   <td><img src="https://github.com/mananrg/BikesApp/blob/main/homescreen.png" width="200"/>   </td>
    <td><img src="https://github.com/mananrg/BikesApp/blob/main/otpscreen.png" width="200"/>   </td>
+   <td><img src="https://github.com/mananrg/BikesApp/blob/main/useragreementscreen.png" width="200"/>   </td>
+   <td><img src="https://github.com/mananrg/BikesApp/blob/main/homescreen.png" width="200"/>   </td>
   </tr>
 </table>
 
