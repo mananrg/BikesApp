@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uber_app/screens/Drawer/Help.dart';
 import 'package:uber_app/screens/Drawer/Operator.dart';
 import 'package:uber_app/screens/Drawer/PassesScreen.dart';
@@ -103,20 +104,75 @@ class _HomeScreenState extends State<HomeScreen> {
       target: LatLng(37.43296265331129, -122.08832357078792),
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
+  Future<void> checkLocationPermission() async {
+    final status = await Permission.location.status;
+    if (status.isGranted) {
+      // Permission is granted
+      _getCurrentLocation();
+      getSavedLocation().then((_) {
+        _cameraPosition = CameraPosition(
+          target: LatLng(latitude, longitude),
+          zoom: 12,
+        );
+
+        newGoogleMapController?.animateCamera(
+          CameraUpdate.newCameraPosition(_cameraPosition),
+        );
+      });
+    } else if (status.isDenied ||
+        status.isRestricted ||
+        status.isPermanentlyDenied) {
+      final result = await Permission.location.request();
+      if (result.isGranted) {
+        // Permission granted
+        _getCurrentLocation();
+        getSavedLocation().then((_) {
+          _cameraPosition = CameraPosition(
+            target: LatLng(latitude, longitude),
+            zoom: 12,
+          );
+
+          newGoogleMapController?.animateCamera(
+            CameraUpdate.newCameraPosition(_cameraPosition),
+          );
+        });
+      } else if (result.isDenied || result.isPermanentlyDenied) {
+        // Permission has been denied or is restricted, so request it
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Location Denied"),
+            content: const Text(
+                "You are suggested to enable location in settings and restart app"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.green),
+                  padding: const EdgeInsets.all(14),
+                  child: const Text(
+                    "OKAY",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-     _getCurrentLocation();
-    getSavedLocation().then((_) {
-      _cameraPosition = CameraPosition(
-        target: LatLng(latitude, longitude),
-        zoom: 12,
-      );
-
-      newGoogleMapController?.animateCamera(
-        CameraUpdate.newCameraPosition(_cameraPosition),
-      );
-    });
+    checkLocationPermission();
   }
 
   @override
@@ -392,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => BikesScreen(),
+            builder: (BuildContext context) => const BikesScreen(),
           ),
         );
       } else {

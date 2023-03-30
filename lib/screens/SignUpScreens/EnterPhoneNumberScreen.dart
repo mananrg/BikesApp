@@ -153,22 +153,22 @@ class _EnterPhoneState extends State<EnterPhone> {
                             codeSent:
                                 (String verificationId, int? resendToken) {
                               EnterPhone.verify = verificationId;
-                              showDialog(
+                             /* showDialog(
                                 context: context,
                                 builder: (ctx) => PopUpMessage(
                                   title: 'OTP Sent',
                                   message:
                                       'OTP was successfully sent your registered number!',
                                 ),
-                              );
-                              Future.delayed(const Duration(seconds: 6), () {
+                              );*/
+                              //Future.delayed(const Duration(seconds: 1), () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         const MyVerify(),
                                   ),
                                 );
-                              });
+                              //});
                             },
                             codeAutoRetrievalTimeout:
                                 (String verificationId) {},

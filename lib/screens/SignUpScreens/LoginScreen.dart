@@ -55,8 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text("Error"),
-          content: const Text("Your data has been successfully updated!"),
+          title: const Text("Location Denied"),
+          content: const Text("Location has been Denied\nYou might have to enable location later in app!"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
