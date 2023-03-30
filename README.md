@@ -25,5 +25,6 @@ Display images of bikes from the repository.
    <td><img src="https://github.com/mananrg/BikesApp/blob/main/otpscreen.png" width="200"/>   </td>
   </tr>
 </table>
+
 ## License
 * This application is released under the MIT License.
