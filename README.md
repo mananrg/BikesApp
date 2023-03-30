@@ -17,9 +17,9 @@ Display images of bikes from the repository.
 * Firebase Authentication for phone number verification.
 * Firebase Realtime Database for storing bike information.
 * Google Maps API for displaying bike locations.
-LoginScreen : ![picture alt](https://github.com/mananrg/BikesApp/blob/main/loginscreen.png/)
-HomeScreen : ![picture alt](https://github.com/mananrg/BikesApp/blob/main/homescreen.png/)
-OtpScreen : ![picture alt](https://github.com/mananrg/BikesApp/blob/main/otpscreen.png/)
+LoginScreen : <img src="https://github.com/mananrg/BikesApp/blob/main/loginscreen.png" width="200"/>
+HomeScreen : <img src="https://github.com/mananrg/BikesApp/blob/main/homescreen.png" width="200"/>
+OtpScreen : <img src="https://github.com/mananrg/BikesApp/blob/main/otpscreen.png" width="200"/>
 
 ## License
 * This application is released under the MIT License.
