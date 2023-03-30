@@ -20,9 +20,9 @@ Display images of bikes from the repository.
 
 <table>
   <tr>
-<img src="https://github.com/mananrg/BikesApp/blob/main/loginscreen.png" width="200"/>
-<img src="https://github.com/mananrg/BikesApp/blob/main/homescreen.png" width="200"/>
-<img src="https://github.com/mananrg/BikesApp/blob/main/otpscreen.png" width="200"/>
+   <td><img src="https://github.com/mananrg/BikesApp/blob/main/loginscreen.png" width="200"/>   </td>
+   <td><img src="https://github.com/mananrg/BikesApp/blob/main/homescreen.png" width="200"/>   </td>
+   <td><img src="https://github.com/mananrg/BikesApp/blob/main/otpscreen.png" width="200"/>   </td>
   </tr>
 </table>
 ## License
