@@ -18,10 +18,12 @@ Display images of bikes from the repository.
 * Firebase Realtime Database for storing bike information.
 * Google Maps API for displaying bike locations.
 
-
+<table>
+  <tr>
 <img src="https://github.com/mananrg/BikesApp/blob/main/loginscreen.png" width="200"/>
 <img src="https://github.com/mananrg/BikesApp/blob/main/homescreen.png" width="200"/>
 <img src="https://github.com/mananrg/BikesApp/blob/main/otpscreen.png" width="200"/>
-
+  </tr>
+</table>
 ## License
 * This application is released under the MIT License.
